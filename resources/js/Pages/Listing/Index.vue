@@ -1,4 +1,5 @@
 <template>
+  <Filters :filters="filters" />
   <div v-if="loading">Loading...</div>
   <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
     <Box v-for="listing in listings.data" :key="listing.id">
@@ -26,7 +27,7 @@
       </div>
     </Box>
   </div>
-  <div v-if="listings.links && listings.links.length > 0" class="mt-4">
+  <div v-if="listings.links && listings.links.length > 0" class="w-full flex justify-center mt-4 mb-4">
     <Pagination :links="listings.links" @page-changed="fetchListings" />
   </div>
 </template>
@@ -42,6 +43,7 @@ import Price from '../../Components/Price.vue';
 import { useMonthlyPayment } from '@/Composables/useMonthlyPayment';
 import { useUserStore } from '@/stores/useUserStore';
 import Pagination from '@/Components/UI/Pagination.vue';
+import Filters from './Components/Filters.vue';
 
 export default {
   name: 'Index',
@@ -51,6 +53,7 @@ export default {
     ListingSpace,
     Price,
     Pagination,
+    Filters,
   },
   data() {
     return {
@@ -59,16 +62,21 @@ export default {
         links: [],
         meta: {},
       },
+      filters: {},
       loading: true,
     };
   },
   methods: {
-    async fetchListings(page) {
+    async fetchListings({ page = 1 } = {}) {
       const listingsStore = useListingsStore();
       this.loading = true;
-      await listingsStore.fetchListings(page);
+
+      const params = { ...this.filters, page };
+      await listingsStore.fetchListings(params);
+
       const { listings } = storeToRefs(listingsStore);
       this.listings = listings.value;
+      
       this.loading = false;
     },
     goToEdit(id) {

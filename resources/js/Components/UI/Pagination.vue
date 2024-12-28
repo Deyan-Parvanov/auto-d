@@ -25,7 +25,7 @@ export default {
     handlePageChange(link) {
       if (!link.url) return;
       const page = new URL(link.url).searchParams.get("page");
-      this.$emit('page-changed', page);
+      this.$emit('page-changed', { page });
     },
   },
 };

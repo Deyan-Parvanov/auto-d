@@ -4,17 +4,21 @@ import apiClient from '../api';
 export const useListingsStore = defineStore('listings', {
   state: () => ({
     listings: [],
+    availableMakes: [],
+    availableEngineTypes: [],
     loading: false,
     error: null,
   }),
 
   actions: {
-    async fetchListings(page) {
+    async fetchListings(params) {
       this.loading = true;
       this.error = null;
       
       try {
-        const response = await apiClient.get(`/listing?page=${page}`);
+        const response = await apiClient.get(`/listing`, 
+          { params }
+        );
         
         this.listings.data = response.data.data;
         this.listings.links = response.data.links;
@@ -44,6 +48,22 @@ export const useListingsStore = defineStore('listings', {
     },
     setErrorMessage(message) {
       this.error = message;
+    },
+    async fetchAvailableMakes() {
+      try {
+        const response = await apiClient.get('/available-makes');
+        this.availableMakes = response.data;
+      } catch (error) {
+        console.error('Failed to fetch makes:', error);
+      }
+    },
+    async fetchEngineTypes() {
+      try {
+        const response = await apiClient.get('/available-engines');
+        this.availableEngineTypes = response.data;
+      } catch (error) {
+        console.error('Failed to fetch engine types:', error);
+      }
     },
   },
 });

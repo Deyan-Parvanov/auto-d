@@ -12,12 +12,38 @@ class ListingController extends Controller
 {
     use AuthorizesRequests;
     
-    public function index()
+    public function index(Request $request)
     {
-        $listings = Listing::orderByDesc('created_at')
-            ->paginate(10);
+        $filters = $request->only([
+            'priceFrom', 'priceTo', 'make', 'engine', 'kmFrom', 'kmTo'
+        ]);
+        // dd($filters);
+        $listings = Listing::mostRecent()
+            ->filter($filters)
+            ->paginate(10)
+            ->withQueryString();
 
         return response()->json($listings);
+    }
+
+    public function getAvailableMakes()
+    {
+        $makes = Listing::select('make')
+            ->distinct()
+            ->orderBy('make', 'ASC')
+            ->pluck('make');
+
+        return response()->json($makes);
+    }
+
+    public function getAvailableEngines()
+    {
+        $engineTypes = Listing::select('engine_type')
+            ->distinct()
+            ->orderBy('engine_type', 'ASC')
+            ->pluck('engine_type');
+
+        return response()->json($engineTypes);
     }
 
     public function store(Request $request)

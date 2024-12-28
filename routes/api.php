@@ -11,9 +11,11 @@ Route::get('/hello', [IndexController::class, 'show'])
 
 Route::get('/listing', [ListingController::class, 'index']);
 Route::get('/listing/{listing}', [ListingController::class, 'show']);
+Route::get('/available-makes', [ListingController::class, 'getAvailableMakes']);
+Route::get('/available-engines', [ListingController::class, 'getAvailableEngines']);
+
 Route::post('/login', [AuthController::class, 'store'])
     ->name('login.store');
-
 Route::post('/register', [UserAccountController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
