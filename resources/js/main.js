@@ -3,7 +3,6 @@ import { createPinia } from 'pinia'; // Import Pinia for state management
 import App from './App.vue'; // Root Vue component
 import router from './router'; // Vue Router configuration
 import '../css/app.css';
-import { useUserStore } from './stores/useUserStore';
 
 // Create Vue app instance
 const app = createApp(App);

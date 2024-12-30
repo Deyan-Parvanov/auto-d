@@ -15,16 +15,6 @@
         <ListingSpace :listing="listing" class="text-lg" />
         <ListingAddress :listing="listing" :id="listing.id" class="text-gray-500" />
       </div>
-      <div>
-        <button @click="goToEdit(listing.id)">
-          Edit
-        </button>
-      </div>
-      <div>
-        <button @click="deleteListing(listing.id)">
-          Delete
-        </button>
-      </div>
     </Box>
   </div>
   <div v-if="listings.links && listings.links.length > 0" class="w-full flex justify-center mt-4 mb-4">
@@ -41,7 +31,6 @@ import ListingAddress from '../../Components/ListingAddress.vue';
 import ListingSpace from '../../Components/ListingSpace.vue';
 import Price from '../../Components/Price.vue';
 import { useMonthlyPayment } from '@/Composables/useMonthlyPayment';
-import { useUserStore } from '@/stores/useUserStore';
 import Pagination from '@/Components/UI/Pagination.vue';
 import Filters from './Components/Filters.vue';
 
@@ -78,37 +67,6 @@ export default {
       this.listings = listings.value;
       
       this.loading = false;
-    },
-    goToEdit(id) {
-      const router = useRouter();
-      router.push({ name: 'listingEdit', params: { id } });
-    },
-    async deleteListing(id) {
-      const userStore = useUserStore();
-      const token = userStore.user || localStorage.getItem('authToken');
-      if (!token) {
-        this.$router.push({ name: 'login' });
-        return;
-      }
-
-      const listingsStore = useListingsStore();
-      const listing = await listingsStore.fetchListing(id);
-      if (!listing) {
-        listingsStore.error = 'Listing not found.';
-        return;
-      }
-
-      const userId = token.id;
-
-      if (!token.is_admin && listing.data.by_user_id !== userId) {
-        listingsStore.error = 'You are not authorized to delete this listing.';
-        return;
-      }
-
-      if (confirm('Are you sure you want to delete this listing?')) {
-        await listingsStore.deleteListing(id);
-        this.fetchListings();
-      }
     },
     monthlyPayment(price) {
       return useMonthlyPayment(price, 2.5, 10);

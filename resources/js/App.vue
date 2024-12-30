@@ -10,8 +10,8 @@
             <router-link to="/listing">AutoD</router-link>
           </div>
           <div v-if="user" class="flex items-center gap-4">
-            <div class="text-sm text-gray-500">{{ user.name }}</div>
-              <router-link to="/listing/create" class="btn-primary">+ New Listing</router-link>
+            <router-link to="/car-dealer/listing" class="text-sm text-gray-500">{{ user.name }}</router-link>
+              <router-link to="/car-dealer/listing/create" class="btn-primary">+ New Listing</router-link>
               <button @click="logout">Logout</button>
           </div>
           <div v-else class="flex items-center gap-2">

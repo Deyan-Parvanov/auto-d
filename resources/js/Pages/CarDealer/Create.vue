@@ -113,7 +113,7 @@ const create = async () => {
   try {
     await listingStore.createListing(form.value);
     alert('Listing created successfully');
-    router.push('/listing'); // Navigate to the listings page
+    router.push('/listing');
   } catch (error) {
     console.error('Failed to create listing', error);
   }

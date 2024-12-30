@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Index from './Pages/Listing/Index.vue';
-import Create from './Pages/Listing/Create.vue';
-import Edit from './Pages/Listing/Edit.vue';
+import Create from './Pages/CarDealer/Create.vue';
+import Edit from './Pages/CarDealer/Edit.vue';
 import Show from './Pages/Listing/Show.vue';
 import Login from './Pages/Auth/Login.vue';
 import Register from './Pages/UserAccount/Register.vue';
+import CarDealerIndex from './Pages/CarDealer/CarDealerIndex.vue';
 import { useUserStore } from './stores/useUserStore';
 import { useListingsStore } from './stores/useListingsStore';
 
@@ -60,11 +61,12 @@ const routes = [
   { path: '/hello', name: 'hello' },
   { path: '/listing', name: 'listing', component: Index },
   { path: '/listing/:id', name: 'listingShow', component: Show },
-  { path: '/listing/create', name: 'listingCreate', component: Create, beforeEnter: requireAuthentication, },
-  { path: '/listing/:id/edit', name: 'listingEdit', component: Edit, beforeEnter: requireAuthorization, },
   { path: '/login', name: 'login', component: Login },
   { path: '/logout', name: 'logout' },
   { path: '/register', name: 'register', component: Register },
+  { path: '/car-dealer/listing', name: 'carDealerListing', component: CarDealerIndex },
+  { path: '/car-dealer/listing/create', name: 'listingCreate', component: Create, beforeEnter: requireAuthentication, },
+  { path: '/car-dealer/listing/:id/edit', name: 'listingEdit', component: Edit, beforeEnter: requireAuthorization, },
 ];
 
 const router = createRouter({

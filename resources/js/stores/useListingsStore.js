@@ -32,10 +32,18 @@ export const useListingsStore = defineStore('listings', {
     },
     async deleteListing(id) {
       try {
-        await apiClient.delete(`/listing/${id}`);
-        this.listings = this.listings.filter((listing) => listing.id !== id); // Remove the deleted listing from the state
+        await apiClient.delete(`/car-dealer/listing/${id}`);
+        this.listings = this.listings.filter((listing) => listing.id !== id);
       } catch (err) {
         this.error = err.response?.data?.message || 'Failed to delete listing!';
+      }
+    },
+    async restoreListing(id) {
+      try {
+        await apiClient.put(`/car-dealer/listing/${id}/restore`);
+        this.listings = this.listings.filter((listing) => listing.id !== id);
+      } catch (err) {
+        this.error = err.response?.data?.message || 'Failed to restore listing!';
       }
     },
     async fetchListing(id) {

@@ -10,12 +10,12 @@ export const useListingCreateStore = defineStore('listingCreateStore', {
   actions: {
     async createListing(payload) {
       try {
-        const response = await apiClient.post('/listing/create', payload);
+        const response = await apiClient.post('/car-dealer/listing/create', payload);
         this.errors = {};
-        return response.data; // Successfully created listing
+        return response.data;
       } catch (error) {
         if (error.response && error.response.data.errors) {
-          this.errors = error.response.data.errors; // Validation errors
+          this.errors = error.response.data.errors;
         }
         throw error;
       }

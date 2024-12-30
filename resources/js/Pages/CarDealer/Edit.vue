@@ -93,7 +93,7 @@ const id = route.params.id;
 
 const fetchListing = async () => {
     try {
-        const response = await apiClient.get(`/listing/${id}/edit`);
+        const response = await apiClient.get(`/car-dealer/listing/${id}/edit`);
         
         Object.assign(form.value, response.data);
     } catch (error) {
@@ -103,8 +103,8 @@ const fetchListing = async () => {
 
 const updateListing = async () => {
     try {
-        await apiClient.put(`/listing/${id}`, form.value);
-        router.push('/listing'); // Redirect to listings page
+        await apiClient.put(`/car-dealer/listing/${id}`, form.value);
+        router.push('/car-dealer/listing');
     } catch (error) {
         if (error.response && error.response.data.errors) {
             errors.value = error.response.data.errors;
