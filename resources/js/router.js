@@ -6,6 +6,7 @@ import Show from './Pages/Listing/Show.vue';
 import Login from './Pages/Auth/Login.vue';
 import Register from './Pages/UserAccount/Register.vue';
 import CarDealerIndex from './Pages/CarDealer/CarDealerIndex.vue';
+import CreateImage from './Pages/CarDealer/ListingImage/CreateImage.vue';
 import { useUserStore } from './stores/useUserStore';
 import { useListingsStore } from './stores/useListingsStore';
 
@@ -43,7 +44,7 @@ const requireAuthorization = async (to, from, next) => {
   try {
     const listingId = to.params.id;
     const listing = await listingStore.fetchListing(listingId);
-    console.log(token);
+    const token = userStore.user || localStorage.getItem('authToken');
     
     if (token.is_admin || (listing && listing.data.by_user_id === token.id)) {
       next();
@@ -67,6 +68,7 @@ const routes = [
   { path: '/car-dealer/listing', name: 'carDealerListing', component: CarDealerIndex },
   { path: '/car-dealer/listing/create', name: 'listingCreate', component: Create, beforeEnter: requireAuthentication, },
   { path: '/car-dealer/listing/:id/edit', name: 'listingEdit', component: Edit, beforeEnter: requireAuthorization, },
+  { path: '/car-dealer/listing/:id/image', name: 'listingImage', component: CreateImage, beforeEnter: requireAuthorization, },
 ];
 
 const router = createRouter({

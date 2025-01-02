@@ -4,6 +4,7 @@ import apiClient from '../api';
 export const useListingsStore = defineStore('listings', {
   state: () => ({
     listings: [],
+    listing: null,
     availableMakes: [],
     availableEngineTypes: [],
     loading: false,
@@ -73,5 +74,17 @@ export const useListingsStore = defineStore('listings', {
         console.error('Failed to fetch engine types:', error);
       }
     },
-  },
+    async setListing(data) {
+      this.listing = await this.fetchListing(data.id);
+    },
+    async deleteImage(imageId) {
+      try {
+        const response = await apiClient.delete(`/car-dealer/listing/${imageId}/image/delete`);
+        
+        return response;
+      } catch (err) {
+        this.error = err.response?.data?.message || 'Failed to delete image!';
+      }
+    },
+  }
 });

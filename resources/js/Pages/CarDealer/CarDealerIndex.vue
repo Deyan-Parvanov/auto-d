@@ -13,24 +13,34 @@
                     </div>
                     <ListingAddress :listing="listing" :id="listing.id" />
                 </div>
-                <div class="flex items-center gap-1 text-gray-600 dark:text-gray-300">
-                    <router-link v-if="!listing.deleted_at" :to="{ name: 'listingShow', params: { id: listing.id } }"
-                        class="btn-outline text-xs font-medium" target="_blank">
-                        Preview
-                    </router-link>
-                    <router-link v-if="!listing.deleted_at" :to="{ name: 'listingEdit', params: { id: listing.id } }"
-                        class="btn-outline text-xs font-medium">
-                        Edit
-                    </router-link>
-                    <div>
-                        <button v-if="!listing.deleted_at" @click="deleteListing(listing.id)" class="btn-outline text-xs font-medium">
-                            Delete
-                        </button>
-                        <button v-else @click="restoreListing(listing.id)" class="btn-outline text-xs font-medium" method="put">
-                            Restore
-                        </button>
+                <section>
+                    <div class="flex items-center gap-1 text-gray-600 dark:text-gray-300">
+                        <router-link v-if="!listing.deleted_at"
+                            :to="{ name: 'listingShow', params: { id: listing.id } }"
+                            class="btn-outline text-xs font-medium" target="_blank">
+                            Preview
+                        </router-link>
+                        <router-link v-if="!listing.deleted_at"
+                            :to="{ name: 'listingEdit', params: { id: listing.id } }"
+                            class="btn-outline text-xs font-medium">
+                            Edit
+                        </router-link>
+                        <div>
+                            <button v-if="!listing.deleted_at" @click="deleteListing(listing.id)"
+                                class="btn-outline text-xs font-medium">
+                                Delete
+                            </button>
+                            <button v-else @click="restoreListing(listing.id)" class="btn-outline text-xs font-medium"
+                                method="put">
+                                Restore
+                            </button>
+                        </div>
                     </div>
-                </div>
+                    <div v-if="!listing.deleted_at" class="mt-2">
+                        <router-link :to="{ name: 'listingImage', params: { id: listing.id } }"
+                            class="block w-full btn-outline text-xs font-medium text-center" @click.native="setListingData(listing)">Images ({{ listing.images_count }})</router-link>
+                    </div>
+                </section>
             </div>
         </Box>
     </section>
@@ -79,7 +89,6 @@ export default {
             this.loading = true;
 
             const params = { ...this.filters, page };
-            // console.log(params);
 
             await carDealerStore.fetchCarDealerListings(params);
 
@@ -134,6 +143,10 @@ export default {
 
             await listingsStore.restoreListing(id);
             this.fetchCarDealerListings({ page: this.$route.query.page || 1 });
+        },
+        async setListingData(listing) {
+            const listingStore = useListingsStore();
+            listingStore.setListing(listing);
         },
     },
     mounted() {

@@ -52,6 +52,8 @@ class ListingController extends Controller
         //     return response()->json(['error' => 'Not authorized.'],403);
         // }
         // $this->authorize('view', $listing);
+        $listing->load('images');
+
         return response()->json($listing);
     }
 }

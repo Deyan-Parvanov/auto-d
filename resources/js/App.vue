@@ -11,8 +11,8 @@
           </div>
           <div v-if="user" class="flex items-center gap-4">
             <router-link to="/car-dealer/listing" class="text-sm text-gray-500">{{ user.name }}</router-link>
-              <router-link to="/car-dealer/listing/create" class="btn-primary">+ New Listing</router-link>
-              <button @click="logout">Logout</button>
+            <router-link to="/car-dealer/listing/create" class="btn-primary">+ New Listing</router-link>
+            <button @click="logout">Logout</button>
           </div>
           <div v-else class="flex items-center gap-2">
             <router-link to="/register">Register</router-link>
@@ -23,20 +23,22 @@
     </header>
 
     <main class="container mx-auto p-4 w-full">
-      <!-- <div v-if="flashSuccess" class="mb-4 border rounded-md shadow-sm border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900 p-2">
-        {{ flashSuccess }}
-      </div> -->
-      
+      <div v-if="flashMessageStore.successMessage"
+        class="mb-4 border rounded-md shadow-sm border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900 p-2">
+        {{ flashMessageStore.successMessage }}
+      </div>
+
       <router-view />
       <Popup />
-      
+
     </main>
   </div>
 </template>
-  
+
 <script>
 import Popup from './Pages/Listing/Popup.vue';
 import { useUserStore } from './stores/useUserStore';
+import { useFlashMessageStore } from './stores/useFlashMessageStore';
 import { onMounted, computed } from 'vue';
 
 export default {
@@ -46,10 +48,13 @@ export default {
     onMounted(() => {
       userStore.initializeUser();
     });
-    
+
+    const flashMessageStore = useFlashMessageStore();
+
     return {
       user: computed(() => userStore.user),
       logout: userStore.logout,
+      flashMessageStore,
     };
   },
   components: {

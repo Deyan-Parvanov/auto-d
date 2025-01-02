@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarDealerController;
+use App\Http\Controllers\CarDealerImageController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\UserAccountController;
 
@@ -33,5 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
       Route::post('/listing/create', [CarDealerController::class, 'store']);
       Route::get('/listing/{id}/edit', [CarDealerController::class, 'edit']);
       Route::put('/listing/{id}', [CarDealerController::class, 'update']);
+      Route::put('/listing/{id}/restore', [CarDealerController::class, 'restore']);
+
+      Route::post('listing/{id}/image', [CarDealerImageController::class, 'store']);
+      Route::delete('listing/{id}/image/delete', [CarDealerImageController::class, 'destroy']);
   });
 });
