@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class CarDealerController extends Controller
 {
-    // use AuthorizesRequests;
+    use AuthorizesRequests;
 
     // public function __construct()
     // {
@@ -25,13 +25,23 @@ class CarDealerController extends Controller
 
         $carDealerListings = Auth::user()
             ->listings()
-            // ->mostRecent()
             ->filter($filters)
             ->withCount('images')
+            ->withCount('offers')
             ->paginate(5)
             ->withQueryString();
 
         return response()->json($carDealerListings);
+    }
+
+    public function show($id)
+    {
+        $listing = Listing::find($id);
+        $listing->load('offers', 'offers.bidder');
+
+        return response()->json([
+            'listing' => $listing,
+        ]);
     }
 
     public function store(Request $request)

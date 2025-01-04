@@ -58,6 +58,9 @@
             </div>
           </div>
         </Box>
+
+        <MakeOffer v-if="user && !offer" :listing-id="listing.id" :price="listing.price" @offerUpdated="handleOfferUpdated" />
+        <OfferMade v-if="user && offer" :offer="offer" />
       </div>
     </div>
   </div>
@@ -66,10 +69,13 @@
 <script>
 import apiClient from '../../api';
 import ListingAddress from '../../Components/ListingAddress.vue';
+import MakeOffer from './Components/MakeOffer.vue';
+import OfferMade from './Components/OfferMade.vue';
 import Box from '../../Components/UI/Box.vue';
 import ListingSpace from '../../Components/ListingSpace.vue';
 import Price from '../../Components/Price.vue';
 import { useMonthlyPayment } from '../../Composables/useMonthlyPayment';
+import { useUserStore } from '@/stores/useUserStore';
 
 export default {
   name: 'Show',
@@ -78,6 +84,8 @@ export default {
     ListingSpace,
     Price,
     Box,
+    MakeOffer,
+    OfferMade,
   },
   data() {
     return {
@@ -86,13 +94,20 @@ export default {
       error: null,
       interestRate: 2.5,
       duration: 10,
+      updatedOffer: null,
+      offer: null,
     };
   },
   computed: {
     monthlyPayment() {
       if (!this.listing || !this.listing.price) return 0;
 
-      return () => useMonthlyPayment(this.listing.price, this.interestRate, this.duration);
+      return () => useMonthlyPayment(this.updatedOffer, this.interestRate, this.duration);
+    },
+    user() {
+      const userStore = useUserStore();
+
+      return userStore.user;
     },
   },
   methods: {
@@ -100,12 +115,17 @@ export default {
       this.loading = true;
       try {
         const response = await apiClient.get(`/listing/${this.$route.params.id}`);
-        this.listing = response.data;
+        
+        this.listing = response.data.listing;
+        this.offer = response.data.offer;
       } catch (err) {
         this.error = err.response?.data?.message || 'Failed to fetch listing';
       } finally {
         this.loading = false;
       }
+    },
+    handleOfferUpdated(value) {
+      this.updatedOffer = value;
     },
   },
   mounted() {

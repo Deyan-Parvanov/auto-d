@@ -16,10 +16,10 @@
         </form>
     </Box>
 
-    <Box v-if="this.listing?.data?.images?.length" class="mt-4">
+    <Box v-if="this.listing?.data?.listing?.images?.length" class="mt-4">
         <template #header>Current Listing Images</template>
         <section class="mt-4 grid grid-cols-3 gap-2">
-            <div v-for="image in this.listing.data.images" :key="image.id" class="flex flex-col justify-between">
+            <div v-for="image in this.listing.data.listing.images" :key="image.id" class="flex flex-col justify-between">
                 <img :src="image.src" class="rounded-md" />
                 <button v-if="!listing.deleted_at" @click="deleteImage(image.id)"
                     class="btn-outline text-xs font-medium">
@@ -37,7 +37,6 @@ import apiClient from '../../../api';
 import { useFlashMessageStore } from '@/stores/useFlashMessageStore';
 import { useListingsStore } from '@/stores/useListingsStore';
 import useVuelidate from '@vuelidate/core';
-// import { required } from '@vuelidate/validators';
 
 export default {
     data() {

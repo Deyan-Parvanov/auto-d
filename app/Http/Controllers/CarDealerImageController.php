@@ -11,7 +11,6 @@ class CarDealerImageController extends Controller
 {
     public function store(Request $request, $id)
     {
-        // dd($request->all());
         $request->validate([
             'images.*' => 'mimes:jpg,jpegpng,webp|max:5000'
         ], [

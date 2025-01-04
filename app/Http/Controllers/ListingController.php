@@ -20,6 +20,7 @@ class ListingController extends Controller
 
         $listings = Listing::mostRecent()
             ->filter($filters)
+            ->withoutSold()
             ->paginate(10)
             ->withQueryString();
 
@@ -48,12 +49,19 @@ class ListingController extends Controller
 
     public function show(Listing $listing)
     {
-        // if (Auth::user()->cannot('view', $listing)) {
-        //     return response()->json(['error' => 'Not authorized.'],403);
-        // }
+        if (Auth::user()->cannot('view', $listing)) {
+            return response()->json(['error' => 'Not authorized.'],403);
+        }
         // $this->authorize('view', $listing);
         $listing->load('images');
 
-        return response()->json($listing);
+        // $offer = !Auth::user() ?
+        //     null : $listing->offers()->byMe()->first();
+        $offer = $listing->offers()->byMe()->first() ?? null;
+
+        return response()->json([
+            'listing' => $listing,
+            'offer' => $offer,
+        ]);
     }
 }

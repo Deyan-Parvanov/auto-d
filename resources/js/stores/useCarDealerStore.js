@@ -4,6 +4,7 @@ import apiClient from '../api';
 export const useCarDealerStore = defineStore('carDealer', {
   state: () => ({
     dealerListings: [],
+    dealerListing: null,
     deleted: false,
     by: '',
     order: 'desc',
@@ -33,6 +34,13 @@ export const useCarDealerStore = defineStore('carDealer', {
     },
     setDeletedFilter(value) {
       this.deleted = value;
+    },
+    async fetchCarDealerListing(id) {
+      try {
+        this.dealerListing = await apiClient.get(`/car-dealer/listing/${id}`);
+      } catch (error) {
+        this.error = err.response?.data?.message || 'Failed to fetch listing!';
+      }
     },
   },
 });

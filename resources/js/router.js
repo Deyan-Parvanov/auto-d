@@ -6,6 +6,7 @@ import Show from './Pages/Listing/Show.vue';
 import Login from './Pages/Auth/Login.vue';
 import Register from './Pages/UserAccount/Register.vue';
 import CarDealerIndex from './Pages/CarDealer/CarDealerIndex.vue';
+import CarDealerShow from './Pages/CarDealer/CarDealerShow.vue';
 import CreateImage from './Pages/CarDealer/ListingImage/CreateImage.vue';
 import { useUserStore } from './stores/useUserStore';
 import { useListingsStore } from './stores/useListingsStore';
@@ -43,6 +44,7 @@ const requireAuthorization = async (to, from, next) => {
 
   try {
     const listingId = to.params.id;
+    //TODO: test fetchListing
     const listing = await listingStore.fetchListing(listingId);
     const token = userStore.user || localStorage.getItem('authToken');
     
@@ -66,6 +68,7 @@ const routes = [
   { path: '/logout', name: 'logout' },
   { path: '/register', name: 'register', component: Register },
   { path: '/car-dealer/listing', name: 'carDealerListing', component: CarDealerIndex },
+  { path: '/car-dealer/listing/:id', name: 'carDealerListingShow', component: CarDealerShow, },
   { path: '/car-dealer/listing/create', name: 'listingCreate', component: Create, beforeEnter: requireAuthentication, },
   { path: '/car-dealer/listing/:id/edit', name: 'listingEdit', component: Edit, beforeEnter: requireAuthorization, },
   { path: '/car-dealer/listing/:id/image', name: 'listingImage', component: CreateImage, beforeEnter: requireAuthorization, },
