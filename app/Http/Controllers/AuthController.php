@@ -16,6 +16,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthenticated'], 401);
         }
 
+        $user->notifications_count = $user->unreadNotifications()->count();
+
         return response()->json($user);
     }
 

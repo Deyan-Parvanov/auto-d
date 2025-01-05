@@ -3,7 +3,7 @@
     <section>
         <CarDealerFilters :filters="filters" />
     </section>
-    <section class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+    <section v-if="dealerListings.data.length" class="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <Box v-for="listing in dealerListings.data" :key="listing.id" :class="{ 'border-dashed': listing.deleted_at }">
             <div class="flex flex-col md:flex-row gap-2 md:items-center justify-between">
                 <div :class="{ 'opacity-25': listing.deleted_at }">
@@ -57,6 +57,7 @@
             </div>
         </Box>
     </section>
+    <EmptyState v-else>No listings yet</EmptyState>
     <section v-if="dealerListings.links && dealerListings.links.length > 0"
         class="w-full flex justify-center mt-4 mb-4">
         <Pagination :links="dealerListings.links" @page-changed="fetchCarDealerListings" />
@@ -70,6 +71,7 @@ import Price from '../../Components/Price.vue';
 import Box from '../../Components/UI/Box.vue';
 import CarDealerFilters from './Components/CarDealerFilters.vue';
 import Pagination from '../../Components/UI/Pagination.vue';
+import EmptyState from '@/Components/UI/EmptyState.vue';
 import { useCarDealerStore } from '../../stores/useCarDealerStore.js';
 import { useUserStore } from '../../stores/useUserStore';
 import { useListingsStore } from '../../stores/useListingsStore';
@@ -92,6 +94,7 @@ export default {
         ListingSpace,
         Price,
         Box,
+        EmptyState,
         Pagination,
         CarDealerFilters,
 

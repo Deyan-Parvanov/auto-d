@@ -10,6 +10,13 @@
             <router-link to="/listing">AutoD</router-link>
           </div>
           <div v-if="user" class="flex items-center gap-4">
+            <router-link to="/notification" class="text-gray-500 relative pr-2 py-2 text-lg">
+              🔔
+              <div v-if="user && user.notifications_count"
+                class="absolute right-0 top-0 w-5 h-5 bg-red-700 dark:bg-red-400 text-white font-medium border border-white dark:border-gray-900 rounded-full text-xs text-center">
+                {{ user.notifications_count }}
+              </div>
+            </router-link>
             <router-link to="/car-dealer/listing" class="text-sm text-gray-500">{{ user.name }}</router-link>
             <router-link to="/car-dealer/listing/create" class="btn-primary">+ New Listing</router-link>
             <button @click="logout">Logout</button>
@@ -42,7 +49,6 @@ import { useFlashMessageStore } from './stores/useFlashMessageStore';
 import { onMounted, computed } from 'vue';
 
 export default {
-  name: 'App',
   setup() {
     const userStore = useUserStore();
     onMounted(() => {

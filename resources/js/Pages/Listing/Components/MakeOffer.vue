@@ -29,6 +29,8 @@ import Price from "@/Components/Price.vue";
 import Box from "@/Components/UI/Box.vue";
 import { useOffersStore } from "@/stores/useOffersStore";
 import { reactive, watch, computed } from "vue";
+import { useUserStore } from "@/stores/useUserStore";
+import { useFlashMessageStore } from "@/stores/useFlashMessageStore";
 
 export default {
     name: "MakeOffer",
@@ -72,11 +74,17 @@ export default {
     methods: {
         async makeOffer() {
             const offersStore = useOffersStore();
+            const userStore = useUserStore();
+            const flashMessageStore = useFlashMessageStore();
+
             try {
-                await offersStore.makeOffer({
+                const response = await offersStore.makeOffer({
                     listing_id: this.listingId,
                     amount: this.form.amount,
                 });
+
+                userStore.initializeUser();
+                flashMessageStore.setSuccessMessage(response.message);
             } catch (error) {
                 console.error("Failed to make an offer:", error);
             }

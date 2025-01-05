@@ -8,6 +8,7 @@ import Register from './Pages/UserAccount/Register.vue';
 import CarDealerIndex from './Pages/CarDealer/CarDealerIndex.vue';
 import CarDealerShow from './Pages/CarDealer/CarDealerShow.vue';
 import CreateImage from './Pages/CarDealer/ListingImage/CreateImage.vue';
+import NotificationIndex from './Pages/Notification/NotificationIndex.vue';
 import { useUserStore } from './stores/useUserStore';
 import { useListingsStore } from './stores/useListingsStore';
 
@@ -72,6 +73,7 @@ const routes = [
   { path: '/car-dealer/listing/create', name: 'listingCreate', component: Create, beforeEnter: requireAuthentication, },
   { path: '/car-dealer/listing/:id/edit', name: 'listingEdit', component: Edit, beforeEnter: requireAuthorization, },
   { path: '/car-dealer/listing/:id/image', name: 'listingImage', component: CreateImage, beforeEnter: requireAuthorization, },
+  { path: '/notification', name: 'notification', component: NotificationIndex, beforeEnter: requireAuthentication, },
 ];
 
 const router = createRouter({

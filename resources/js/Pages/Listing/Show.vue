@@ -63,6 +63,7 @@
         <OfferMade v-if="user && offer" :offer="offer" />
       </div>
     </div>
+    <EmptyState v-else class="md:col-span-7 flex items-center">No images</EmptyState>
   </div>
 </template>
 
@@ -72,6 +73,7 @@ import ListingAddress from '../../Components/ListingAddress.vue';
 import MakeOffer from './Components/MakeOffer.vue';
 import OfferMade from './Components/OfferMade.vue';
 import Box from '../../Components/UI/Box.vue';
+import EmptyState from '../../Components/UI/EmptyState.vue';
 import ListingSpace from '../../Components/ListingSpace.vue';
 import Price from '../../Components/Price.vue';
 import { useMonthlyPayment } from '../../Composables/useMonthlyPayment';
@@ -86,6 +88,7 @@ export default {
     Box,
     MakeOffer,
     OfferMade,
+    EmptyState,
   },
   data() {
     return {

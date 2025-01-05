@@ -8,6 +8,8 @@ use App\Http\Controllers\CarDealerController;
 use App\Http\Controllers\CarDealerImageController;
 use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationSeenController;
 use App\Http\Controllers\UserAccountController;
 
 Route::get('/hello', [IndexController::class, 'show'])
@@ -28,8 +30,14 @@ Route::middleware('auth:sanctum')->group(function () {
     ->name('logout');
 
   Route::post('/listing/offer', [ListingOfferController::class, 'store'])
-  ->middleware('auth');
-  Route::get('/listing/{listing}', [ListingController::class, 'show'])->middleware('auth');
+    ->middleware('auth');
+  Route::get('/listing/{listing}', [ListingController::class, 'show'])
+    ->middleware('auth');
+
+  Route::get('/notification', [NotificationController::class, 'index'])
+    ->middleware('auth');
+  Route::put('/notification/{notification}/seen', NotificationSeenController::class)
+    ->middleware('auth');
 
   Route::prefix('car-dealer')
     ->name('car-dealer.')
