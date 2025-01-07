@@ -11,5 +11,3 @@ export const useMonthlyPayment = (total, interestRate, duration) => {
 
     return { monthlyPayment, totalPaid, totalInterest }
 }
-
-

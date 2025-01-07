@@ -123,7 +123,7 @@ const getFieldError = (fieldName) => {
   if (errors.value[fieldName]) {
     return errors.value[fieldName];
   }
-  
+
   const fieldValidation = $v.value[fieldName];
   if (fieldValidation?.$error) {
     if (fieldValidation?.required?.$invalid) return 'This field is required.';

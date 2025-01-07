@@ -6,7 +6,7 @@
       <div>
         <div class="flex items-center gap-1">
           <Price :price="listing.price" class="text-2xl font-bold" />
-        
+
           <div class="text-xs text-gray-500">
             <Price :price="monthlyPayment(listing.price).monthlyPayment" /> pm
           </div>
@@ -65,7 +65,7 @@ export default {
 
       const { listings } = storeToRefs(listingsStore);
       this.listings = listings.value;
-      
+
       this.loading = false;
     },
     monthlyPayment(price) {
@@ -83,13 +83,13 @@ export default {
     this.fetchListings(page);
   },
   watch: {
-  '$route.query': {
-    handler(newQuery) {
-      this.filters = { ...newQuery };
-      this.fetchListings({ page: newQuery.page || 1 });
+    '$route.query': {
+      handler(newQuery) {
+        this.filters = { ...newQuery };
+        this.fetchListings({ page: newQuery.page || 1 });
+      },
+      immediate: true,
     },
-    immediate: true,
   },
-},
 };
 </script>

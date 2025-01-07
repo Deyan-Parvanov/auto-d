@@ -59,7 +59,8 @@
           </div>
         </Box>
 
-        <MakeOffer v-if="user && !offer" :listing-id="listing.id" :price="listing.price" @offerUpdated="handleOfferUpdated" />
+        <MakeOffer v-if="user && !offer" :listing-id="listing.id" :price="listing.price"
+          @offerUpdated="handleOfferUpdated" />
         <OfferMade v-if="user && offer" :offer="offer" />
       </div>
     </div>
@@ -118,7 +119,7 @@ export default {
       this.loading = true;
       try {
         const response = await apiClient.get(`/listing/${this.$route.params.id}`);
-        
+
         this.listing = response.data.listing;
         this.offer = response.data.offer;
       } catch (err) {

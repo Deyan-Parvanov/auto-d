@@ -1,7 +1,7 @@
 <template>
-    <div v-if="message" class="popup">
-        <p>{{ message }}</p>
-    </div>
+  <div v-if="message" class="popup">
+    <p>{{ message }}</p>
+  </div>
 </template>
 
 <script>
@@ -9,7 +9,7 @@ import { useListingsStore } from '../../stores/useListingsStore';
 import { computed, watch } from 'vue';
 
 export default {
-    setup() {
+  setup() {
     const listingStore = useListingsStore();
     const message = computed(() => listingStore.error);
 
@@ -46,4 +46,3 @@ export default {
   z-index: 1000;
 }
 </style>
-  

@@ -12,7 +12,8 @@
                 </span>
             </div>
             <div>
-                <button v-if="!notification.read_at" @click="markAsRead(notification.id)" class="btn-outline text-xs font-medium uppercase">
+                <button v-if="!notification.read_at" @click="markAsRead(notification.id)"
+                    class="btn-outline text-xs font-medium uppercase">
                     Mark as read
                 </button>
             </div>
@@ -67,7 +68,7 @@ export default {
             const flashMessageStore = useFlashMessageStore();
 
             const response = await notificationsStore.markAsRead(id);
-            
+
             userStore.initializeUser();
             this.fetchNotifications();
             flashMessageStore.setSuccessMessage(response.data.message);

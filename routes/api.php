@@ -16,7 +16,6 @@ Route::get('/hello', [IndexController::class, 'show'])
   ->middleware('auth');
 
 Route::get('/listing', [ListingController::class, 'index']);
-// Route::get('/listing/{listing}', [ListingController::class, 'show'])->middleware('auth');
 Route::get('/available-makes', [ListingController::class, 'getAvailableMakes']);
 Route::get('/available-engines', [ListingController::class, 'getAvailableEngines']);
 
@@ -31,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
   Route::post('/listing/offer', [ListingOfferController::class, 'store'])
     ->middleware('auth');
-  Route::get('/listing/{listing}', [ListingController::class, 'show'])
+  Route::get('/listing/{id}', [ListingController::class, 'show'])
     ->middleware('auth');
 
   Route::get('/notification', [NotificationController::class, 'index'])

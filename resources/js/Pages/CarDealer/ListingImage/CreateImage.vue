@@ -94,8 +94,6 @@ export default {
                 const listingsStore = useListingsStore();
                 this.listing = await listingsStore.fetchListing(listingId);
                 this.reset();
-
-                // this.listing = response.data;
             } catch (err) {
                 this.error = err.response?.data?.errors?.images?.[0] || err.response?.data?.message || 'Failed to upload images.';
             }

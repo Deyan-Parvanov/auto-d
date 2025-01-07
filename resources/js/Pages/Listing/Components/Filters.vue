@@ -1,44 +1,28 @@
 <template>
-<form @submit.prevent="applyFilters">
+  <form @submit.prevent="applyFilters">
     <div class="mb-8 mt-4 flex flex-wrap gap-2">
-    <div class="flex flex-nowrap items-center">
-        <input
-            v-model.number="filterForm.priceFrom"
-            type="text" placeholder="Price from"
-            class="input-filter-l w-28"
-        />
-        <input
-            v-model.number="filterForm.priceTo"
-            type="text" placeholder="Price to" 
-            class="input-filter-r w-28"
-        />
-    </div>
-    <div class="flex flex-nowrap items-center">
+      <div class="flex flex-nowrap items-center">
+        <input v-model.number="filterForm.priceFrom" type="text" placeholder="Price from" class="input-filter-l w-28" />
+        <input v-model.number="filterForm.priceTo" type="text" placeholder="Price to" class="input-filter-r w-28" />
+      </div>
+      <div class="flex flex-nowrap items-center">
         <select v-model="filterForm.make" class="input-filter-l w-28">
-        <option :value="null">Make</option>
-        <option v-for="make in availableMakes" :key="make" :value="make">{{ make }}</option>
+          <option :value="null">Make</option>
+          <option v-for="make in availableMakes" :key="make" :value="make">{{ make }}</option>
         </select>
         <select v-model="filterForm.engine" class="input-filter-r w-28">
-        <option :value="null">Engine</option>
-        <option v-for="engine in availableEngineTypes" :key="engine" :value="engine">{{ engine }}</option>
+          <option :value="null">Engine</option>
+          <option v-for="engine in availableEngineTypes" :key="engine" :value="engine">{{ engine }}</option>
         </select>
+      </div>
+      <div class="flex flex-nowrap items-center">
+        <input v-model.number="filterForm.kmFrom" type="text" placeholder="Km from" class="input-filter-l w-28" />
+        <input v-model.number="filterForm.kmTo" type="text" placeholder="Km to" class="input-filter-r w-28" />
+      </div>
+      <button type="submit" class="btn-normal">Filter</button>
+      <button type="reset" @click="clearFilters">Clear</button>
     </div>
-    <div class="flex flex-nowrap items-center">
-        <input
-            v-model.number="filterForm.kmFrom"
-            type="text" placeholder="Km from"
-            class="input-filter-l w-28"
-        />
-        <input
-            v-model.number="filterForm.kmTo"
-            type="text" placeholder="Km to"
-            class="input-filter-r w-28"
-        />
-    </div>
-    <button type="submit" class="btn-normal">Filter</button>
-    <button type="reset" @click="clearFilters">Clear</button>
-    </div>
-</form>
+  </form>
 </template>
 
 <script>
@@ -96,7 +80,7 @@ export default {
     async applyFilters() {
       await this.updateQueryParams();
       await this.$nextTick();
-      
+
       const params = { ...this.$route.query };
       await this.fetchListings(params);
     },

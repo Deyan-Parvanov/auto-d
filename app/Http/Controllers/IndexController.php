@@ -11,9 +11,4 @@ class IndexController extends Controller
         return response()->json('Hello from Laravel!');
         
     }
-
-    public function show()
-    {
-        return response()->json('Showwwwwwww');
-    }
 }

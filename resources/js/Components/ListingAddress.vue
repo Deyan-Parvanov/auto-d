@@ -2,12 +2,12 @@
   <router-link :to="{ name: 'listingShow', params: { id } }">
     <span>
       {{ listing.model }} {{ listing.make }}, {{
-      listing.category }}, for ${{ listing.price }}
+        listing.category }}, for ${{ listing.price }}
     </span>
   </router-link>
-  
+
 </template>
-  
+
 <script>
 export default {
   props: {

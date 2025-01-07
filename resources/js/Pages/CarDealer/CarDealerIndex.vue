@@ -115,7 +115,6 @@ export default {
             this.loading = false;
         },
         async deleteListing(id) {
-            // Logic is repeating with Restore method. Refactor it
             const userStore = useUserStore();
             const token = userStore.user || localStorage.getItem('authToken');
             if (!token) {
