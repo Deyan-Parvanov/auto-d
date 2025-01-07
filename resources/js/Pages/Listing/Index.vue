@@ -23,14 +23,14 @@
 </template>
 
 <script>
-import Box from '../../Components/UI/Box.vue';
-import ListingAddress from '../../Components/ListingAddress.vue';
-import ListingSpace from '../../Components/ListingSpace.vue';
-import Price from '../../Components/Price.vue';
+import Box from '@/Components/UI/Box.vue';
+import ListingAddress from '@/Components/ListingAddress.vue';
+import ListingSpace from '@/Components/ListingSpace.vue';
+import Price from '@/Components/Price.vue';
 import Pagination from '@/Components/UI/Pagination.vue';
 import Filters from './Components/Filters.vue';
 import { storeToRefs } from 'pinia';
-import { useListingsStore } from '../../stores/useListingsStore';
+import { useListingsStore } from '@/stores/useListingsStore';
 import { useRouter } from 'vue-router';
 import { useMonthlyPayment } from '@/Composables/useMonthlyPayment';
 

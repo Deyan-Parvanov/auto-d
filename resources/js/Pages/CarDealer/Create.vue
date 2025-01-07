@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useListingCreateStore } from '../../stores/useListingsCreateStore';
+import { useListingCreateStore } from '@/stores/useListingsCreateStore';
 import { useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
 import { required, numeric, minValue, maxValue } from '@vuelidate/validators';

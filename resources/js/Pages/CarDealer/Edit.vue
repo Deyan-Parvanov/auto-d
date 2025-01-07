@@ -22,7 +22,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
 import { required, numeric, minValue, maxValue } from '@vuelidate/validators';
-import apiClient from '../../api';
+import apiClient from '@/api';
 
 const fields = [
   { name: 'category', label: 'Category', type: 'text' },

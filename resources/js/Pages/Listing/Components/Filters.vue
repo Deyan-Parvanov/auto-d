@@ -27,7 +27,7 @@
 
 <script>
 import { mapActions, mapState } from 'pinia';
-import { useListingsStore } from '../../../stores/useListingsStore';
+import { useListingsStore } from '@/stores/useListingsStore';
 
 export default {
   name: 'Filters',

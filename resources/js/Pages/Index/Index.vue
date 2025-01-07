@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { useListingsStore } from '../../stores/useListingsStore';
+import { useListingsStore } from '@/stores/useListingsStore';
 
 export default {
     setup() {

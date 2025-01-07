@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import apiClient from '../api';
+import apiClient from '@/api';
 
 export const useListingCreateStore = defineStore('listingCreateStore', {
   state: () => ({

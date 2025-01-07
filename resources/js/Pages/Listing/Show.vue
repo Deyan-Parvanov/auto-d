@@ -69,15 +69,15 @@
 </template>
 
 <script>
-import apiClient from '../../api';
-import ListingAddress from '../../Components/ListingAddress.vue';
+import apiClient from '@/api';
+import ListingAddress from '@/Components/ListingAddress.vue';
 import MakeOffer from './Components/MakeOffer.vue';
 import OfferMade from './Components/OfferMade.vue';
-import Box from '../../Components/UI/Box.vue';
-import EmptyState from '../../Components/UI/EmptyState.vue';
-import ListingSpace from '../../Components/ListingSpace.vue';
-import Price from '../../Components/Price.vue';
-import { useMonthlyPayment } from '../../Composables/useMonthlyPayment';
+import Box from '@/Components/UI/Box.vue';
+import EmptyState from '@/Components/UI/EmptyState.vue';
+import ListingSpace from '@/Components/ListingSpace.vue';
+import Price from '@/Components/Price.vue';
+import { useMonthlyPayment } from '@/Composables/useMonthlyPayment';
 import { useUserStore } from '@/stores/useUserStore';
 
 export default {

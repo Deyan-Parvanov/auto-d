@@ -65,16 +65,16 @@
 </template>
 
 <script>
-import ListingAddress from '../../Components/ListingAddress.vue';
-import ListingSpace from '../../Components/ListingSpace.vue';
-import Price from '../../Components/Price.vue';
-import Box from '../../Components/UI/Box.vue';
+import ListingAddress from '@/Components/ListingAddress.vue';
+import ListingSpace from '@/Components/ListingSpace.vue';
+import Price from '@/Components/Price.vue';
+import Box from '@/Components/UI/Box.vue';
 import CarDealerFilters from './Components/CarDealerFilters.vue';
 import Pagination from '../../Components/UI/Pagination.vue';
 import EmptyState from '@/Components/UI/EmptyState.vue';
-import { useCarDealerStore } from '../../stores/useCarDealerStore.js';
-import { useUserStore } from '../../stores/useUserStore';
-import { useListingsStore } from '../../stores/useListingsStore';
+import { useCarDealerStore } from '@/stores/useCarDealerStore.js';
+import { useUserStore } from '@/stores/useUserStore';
+import { useListingsStore } from '@/stores/useListingsStore';
 import { storeToRefs } from 'pinia';
 import { useFlashMessageStore } from '@/stores/useFlashMessageStore';
 

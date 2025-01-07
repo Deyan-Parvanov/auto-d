@@ -33,8 +33,8 @@
 
 
 <script>
-import Box from '../../../Components/UI/Box.vue';
-import apiClient from '../../../api';
+import Box from '@/Components/UI/Box.vue';
+import apiClient from '@/api';
 import { useFlashMessageStore } from '@/stores/useFlashMessageStore';
 import { useListingsStore } from '@/stores/useListingsStore';
 import useVuelidate from '@vuelidate/core';

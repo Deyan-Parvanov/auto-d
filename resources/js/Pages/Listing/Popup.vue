@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { useListingsStore } from '../../stores/useListingsStore';
+import { useListingsStore } from '@/stores/useListingsStore';
 import { computed, watch } from 'vue';
 
 export default {
