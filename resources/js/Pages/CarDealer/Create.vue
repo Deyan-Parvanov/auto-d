@@ -1,86 +1,14 @@
 <template>
   <form @submit.prevent="create">
     <div class="grid grid-cols-6 gap-4">
-      <div class="col-span-2">
-        <label class="label">Category</label>
-        <input v-model="form.category" type="text" class="input" />
-        <div v-if="listingStore.errors.category">
-          {{ listingStore.errors.category }}
+      <div class="col-span-3" v-for="field in fields" :key="field.name">
+        <label class="label">{{ field.label }}</label>
+        <input v-model="form[field.name]" :type="field.type" class="input"
+          :class="{ 'border-red-500': $v[field.name]?.$invalid && $v[field.name]?.$dirty }" />
+        <div v-if="$v[field.name]?.$error" class="input-error">
+          {{ fieldError(field.name) }}
         </div>
       </div>
-
-      <div class="col-span-2">
-        <label class="label">Make</label>
-        <input v-model="form.make" type="text" class="input" />
-        <div v-if="listingStore.errors.make" class="input-error">
-          {{ listingStore.errors.make }}
-        </div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Model</label>
-        <input v-model="form.model" type="text" class="input" />
-        <div v-if="listingStore.errors.model" class="input-error">
-          {{ listingStore.errors.model }}
-        </div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Year</label>
-        <input v-model="form.year" type="text" class="input" />
-        <div v-if="listingStore.errors.year" class="input-error">
-          {{ listingStore.errors.year }}
-        </div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Engine Type</label>
-        <input v-model="form.engine_type" type="text" class="input" />
-        <div v-if="listingStore.errors.engine_type" class="input-error">
-          {{ listingStore.errors.engine_type }}
-        </div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Horse power</label>
-        <input v-model.number="form.horsepower" type="text" class="input" />
-        <div v-if="listingStore.errors.horsepower" class="input-error">
-          {{ listingStore.errors.horsepower }}
-        </div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Total Kilometers</label>
-        <input v-model.number="form.total_kilometers" type="text" class="input" />
-        <div v-if="listingStore.errors.total_kilometers" class="input-error">
-          {{ listingStore.errors.total_kilometers }}
-        </div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="blabel">Color</label>
-        <input v-model="form.color" type="text" class="input" />
-        <div v-if="listingStore.errors.color" class="input-error">
-          {{ listingStore.errors.color }}
-        </div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">City</label>
-        <input v-model="form.city" type="text" class="input" />
-        <div v-if="listingStore.errors.city" class="input-error">
-          {{ listingStore.errors.city }}
-        </div>
-      </div>
-
-      <div class="col-span-6">
-        <label class="label">Price</label>
-        <input v-model.number="form.price" type="text" class="input" />
-        <div v-if="listingStore.errors.price" class="input-error">
-          {{ listingStore.errors.price }}
-        </div>
-      </div>
-
       <div class="col-span-6">
         <button type="submit" class="btn-primary">Create</button>
       </div>
@@ -92,6 +20,21 @@
 import { ref } from 'vue';
 import { useListingCreateStore } from '../../stores/useListingsCreateStore';
 import { useRouter } from 'vue-router';
+import useVuelidate from '@vuelidate/core';
+import { required, numeric, minValue, maxValue } from '@vuelidate/validators';
+
+const fields = [
+  { name: 'category', label: 'Category', type: 'text' },
+  { name: 'make', label: 'Make', type: 'text' },
+  { name: 'model', label: 'Model', type: 'text' },
+  { name: 'year', label: 'Year', type: 'text' },
+  { name: 'engine_type', label: 'Engine Type', type: 'text' },
+  { name: 'horsepower', label: 'Horse Power', type: 'number' },
+  { name: 'total_kilometers', label: 'Total Kilometers', type: 'number' },
+  { name: 'color', label: 'Color', type: 'text' },
+  { name: 'city', label: 'City', type: 'text' },
+  { name: 'price', label: 'Price', type: 'number' },
+];
 
 const form = ref({
   category: null,
@@ -106,26 +49,86 @@ const form = ref({
   price: 0,
 });
 
+const errors = ref({});
 const listingStore = useListingCreateStore();
 const router = useRouter();
 
+const rules = {
+  category: { required },
+  make: { required },
+  model: { required },
+  year: {
+    required,
+    numeric,
+    minValue: minValue(1900),
+    maxValue: maxValue(new Date().getFullYear()),
+  },
+  engine_type: {},
+  horsepower: { numeric },
+  total_kilometers: { numeric },
+  color: { required },
+  city: { required },
+  price: {
+    required,
+    numeric,
+    minValue: minValue(0),
+  },
+};
+
+const $v = useVuelidate(rules, form);
+
 const create = async () => {
+  $v.value.$touch();
+  if ($v.value.$invalid) {
+    console.error("Invalid data.");
+  }
+
   try {
     await listingStore.createListing(form.value);
     alert('Listing created successfully');
     router.push('/listing');
   } catch (error) {
+    if (error.response && error.response.data.errors) {
+      mapBackendErrors(error.response.data.errors);
+    }
     console.error('Failed to create listing', error);
   }
 };
+
+const mapBackendErrors = (backendErrors) => {
+  errors.value = {};
+  for (const field in backendErrors) {
+    errors.value[field] = backendErrors[field].join(', ');
+  }
+};
+
+const fieldError = (fieldName) => {
+  if (errors.value[fieldName]) {
+    return errors.value[fieldName];
+  } else if ($v[fieldName]?.$error) {
+    return 'This field is invalid';
+  }
+  return '';
+};
 </script>
-  
+
 <style scoped>
-label {
-margin-right: 2em;
+.label {
+  margin-right: 2em;
 }
 
-div {
-padding: 2px
+.input {
+  border: 1px solid #ccc;
+  padding: 0.5em;
+}
+
+.input-error {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 0.5em;
+}
+
+.border-red-500 {
+  border-color: red;
 }
 </style>

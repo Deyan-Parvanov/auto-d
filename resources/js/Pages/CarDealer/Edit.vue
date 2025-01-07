@@ -1,66 +1,14 @@
 <template>
   <form @submit.prevent="updateListing">
     <div class="grid grid-cols-6 gap-4">
-      <div class="col-span-2">
-        <label class="label">Category</label>
-        <input v-model="form.category" type="text" class="input" />
-        <div v-if="errors.category" class="input-error">{{ errors.category }}</div>
+      <div class="col-span-3" v-for="field in fields" :key="field.name">
+        <label class="label">{{ field.label }}</label>
+        <input v-model="form[field.name]" :type="field.type" class="input"
+          :class="{ 'border-red-500': showError(field.name) }" @input="clearFieldError(field.name)" />
+        <div v-if="showError(field.name)" class="input-error">
+          {{ getFieldError(field.name) }}
+        </div>
       </div>
-
-      <div class="col-span-2">
-        <label class="label">Make</label>
-        <input v-model="form.make" type="text" class="input" />
-        <div v-if="errors.make">{{ errors.make }}</div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Model</label>
-        <input v-model="form.model" type="text" class="input" />
-        <div v-if="errors.model">{{ errors.model }}</div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Year</label>
-        <input v-model="form.year" type="text" class="input" />
-        <div v-if="errors.year">{{ errors.model }}</div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Engine Type</label>
-        <input v-model="form.engine_type" type="text" class="input" />
-        <div v-if="errors.engine_type">{{ errors.engine_type }}</div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Horse power</label>
-        <input v-model.number="form.horsepower" type="text" class="input" />
-        <div v-if="errors.horsepower">{{ errors.horsepower }}</div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Total Kilometers</label>
-        <input v-model.number="form.total_kilometers" type="text" class="input" />
-        <div v-if="errors.total_kilometers" class="input-error">{{ errors.total_kilometers }}</div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">Color</label>
-        <input v-model="form.color" type="text" class="input" />
-        <div v-if="errors.color" class="input-error">{{ errors.color }}</div>
-      </div>
-
-      <div class="col-span-2">
-        <label class="label">City</label>
-        <input v-model="form.city" type="text" class="input" />
-        <div v-if="errors.city" class="input-error">{{ errors.city }}</div>
-      </div>
-
-      <div class="col-span-6">
-        <label class="label">Price</label>
-        <input v-model.number="form.price" type="text" class="input" />
-        <div v-if="errors.price" class="input-error">{{ errors.price }}</div>
-      </div>
-
       <div class="col-span-2">
         <button type="submit" class="btn-primary">Update</button>
       </div>
@@ -68,10 +16,26 @@
   </form>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import useVuelidate from '@vuelidate/core';
+import { required, numeric, minValue, maxValue } from '@vuelidate/validators';
 import apiClient from '../../api';
+
+const fields = [
+  { name: 'category', label: 'Category', type: 'text' },
+  { name: 'make', label: 'Make', type: 'text' },
+  { name: 'model', label: 'Model', type: 'text' },
+  { name: 'year', label: 'Year', type: 'text' },
+  { name: 'engine_type', label: 'Engine Type', type: 'text' },
+  { name: 'horsepower', label: 'Horsepower', type: 'number' },
+  { name: 'total_kilometers', label: 'Total Kilometers', type: 'number' },
+  { name: 'color', label: 'Color', type: 'text' },
+  { name: 'city', label: 'City', type: 'text' },
+  { name: 'price', label: 'Price', type: 'number' },
+];
 
 const form = ref({
   category: null,
@@ -79,11 +43,11 @@ const form = ref({
   model: null,
   year: null,
   engine_type: null,
-  horsepower: 0,
-  total_kilometers: 0,
+  horsepower: null,
+  total_kilometers: null,
   color: null,
   city: null,
-  price: 0,
+  price: null,
 });
 
 const errors = ref({});
@@ -91,38 +55,95 @@ const route = useRoute();
 const router = useRouter();
 const id = route.params.id;
 
+const rules = {
+  category: { required },
+  make: { required },
+  model: { required },
+  year: {
+    required,
+    numeric,
+    minValue: minValue(1900),
+    maxValue: maxValue(new Date().getFullYear()),
+  },
+  engine_type: {},
+  horsepower: { numeric },
+  total_kilometers: { numeric },
+  color: { required },
+  city: { required },
+  price: {
+    required,
+    numeric,
+    minValue: minValue(0),
+  },
+};
+
+const $v = useVuelidate(rules, form);
+
 const fetchListing = async () => {
-    try {
-        const response = await apiClient.get(`/car-dealer/listing/${id}/edit`);
-        
-        Object.assign(form.value, response.data);
-    } catch (error) {
-        console.error(error);
-    }
+  try {
+    const response = await apiClient.get(`/car-dealer/listing/${id}/edit`);
+    Object.assign(form.value, response.data);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const updateListing = async () => {
-    try {
-        await apiClient.put(`/car-dealer/listing/${id}`, form.value);
-        router.push('/car-dealer/listing');
-    } catch (error) {
-        if (error.response && error.response.data.errors) {
-            errors.value = error.response.data.errors;
-        }
-        console.error(error);
+  $v.value.$touch();
+  if ($v.value.$invalid) {
+    console.error('Invalid data.');
+    return;
+  }
+
+  try {
+    await apiClient.put(`/car-dealer/listing/${id}`, form.value);
+    router.push('/car-dealer/listing');
+  } catch (error) {
+    if (error.response && error.response.data.errors) {
+      mapBackendErrors(error.response.data.errors);
     }
+    console.error(error);
+  }
+};
+
+const mapBackendErrors = (backendErrors) => {
+  for (const field in backendErrors) {
+    errors.value[field] = backendErrors[field].join(', ');
+  }
+};
+
+const clearFieldError = (fieldName) => {
+  if (errors.value[fieldName]) {
+    delete errors.value[fieldName];
+  }
+  $v.value[fieldName]?.$reset();
+};
+
+const getFieldError = (fieldName) => {
+  if (errors.value[fieldName]) {
+    return errors.value[fieldName];
+  }
+  
+  const fieldValidation = $v.value[fieldName];
+  if (fieldValidation?.$error) {
+    if (fieldValidation?.required?.$invalid) return 'This field is required.';
+    if (fieldValidation?.numeric?.$invalid) return 'This field must be numeric.';
+    if (fieldName === 'year') {
+      if (fieldValidation?.minValue?.$invalid) return 'Year must be at least 1900.';
+      if (fieldValidation?.maxValue?.$invalid) return `Year cannot exceed ${new Date().getFullYear()}.`;
+    }
+    if (fieldName === 'price' && fieldValidation?.minValue?.$invalid) {
+      return 'Price must be at least 0.';
+    }
+  }
+  return '';
+};
+
+const showError = (fieldName) => {
+  return errors.value[fieldName] || ($v.value[fieldName]?.$dirty && $v.value[fieldName]?.$invalid);
 };
 
 onMounted(() => {
-    fetchListing();
+  fetchListing();
 });
 </script>
-
-<style scoped>
-label {
-  margin-right: 2em;
-}
-div {
-  padding: 2px
-}
-</style>

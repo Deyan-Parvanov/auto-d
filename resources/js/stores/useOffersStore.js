@@ -22,7 +22,9 @@ export const useOffersStore = defineStore('listingOffersStore', {
     },
     async acceptOfferAction(offerId) {
         try {
-            await apiClient.put(`/car-dealer/listing/${offerId}/accept`);
+            const response = await apiClient.put(`/car-dealer/listing/${offerId}/accept`);
+
+            return response;
         } catch (error) {
             console.error("Error accepting offer:", error);
         }

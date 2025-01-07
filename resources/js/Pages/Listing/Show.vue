@@ -122,7 +122,7 @@ export default {
         this.listing = response.data.listing;
         this.offer = response.data.offer;
       } catch (err) {
-        this.error = err.response?.data?.message || 'Failed to fetch listing';
+        this.error = err.response?.data?.error || 'Failed to fetch listing';
       } finally {
         this.loading = false;
       }

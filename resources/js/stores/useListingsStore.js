@@ -33,16 +33,20 @@ export const useListingsStore = defineStore('listings', {
     },
     async deleteListing(id) {
       try {
-        await apiClient.delete(`/car-dealer/listing/${id}`);
+        const response = await apiClient.delete(`/car-dealer/listing/${id}`);
         this.listings = this.listings.filter((listing) => listing.id !== id);
+
+        return response;
       } catch (err) {
         this.error = err.response?.data?.message || 'Failed to delete listing!';
       }
     },
     async restoreListing(id) {
       try {
-        await apiClient.put(`/car-dealer/listing/${id}/restore`);
+        const response = await apiClient.put(`/car-dealer/listing/${id}/restore`);
         this.listings = this.listings.filter((listing) => listing.id !== id);
+
+        return response;
       } catch (err) {
         this.error = err.response?.data?.message || 'Failed to restore listing!';
       }
@@ -50,6 +54,7 @@ export const useListingsStore = defineStore('listings', {
     async fetchListing(id) {
       try {
         const selectedListing = await apiClient.get(`/listing/${id}`);
+      
         return selectedListing;
       } catch (error) {
         this.error = err.response?.data?.message || 'Failed to fetch listing!';

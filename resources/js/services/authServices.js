@@ -13,7 +13,7 @@ export async function loginUser({ email, password }) {
   }
   catch (e) {
     console.error('Ops something went wrong', e);
-    return null;
+    return e.response.data;
   }
 }
 
@@ -34,6 +34,6 @@ export async function registerUser({ email, name, password, confirmPassword }) {
   }
   catch (e) {
     console.error('Ops something went wrong', e);
-    return null;
+    return e.response.data;
   }
 }

@@ -16,7 +16,9 @@
 
         <div v-else class="md:col-span-7 flex flex-col gap-4">
             <Offer v-for="offer in dealerListing?.data?.listing?.offers" :key="offer.id" :offer="offer"
-                :listing-price="dealerListing?.data?.listing?.price" :is-sold="dealerListing?.data?.listing?.sold_at != null" />
+                :listing-price="dealerListing?.data?.listing?.price"
+                :is-sold="dealerListing?.data?.listing?.sold_at != null" :all-offers-disabled="allOffersDisabled"
+                @disable-all-offers="disableAllOffers" />
         </div>
 
         <div class="md:col-span-5">
@@ -56,6 +58,7 @@ export default {
             listingId: this.$route.params.id,
             isLoading: false,
             error: null,
+            allOffersDisabled: false,
         };
     },
     computed: {
@@ -77,6 +80,9 @@ export default {
     },
     methods: {
         ...mapActions(useCarDealerStore, ['fetchCarDealerListing']),
+        disableAllOffers() {
+            this.allOffersDisabled = true;
+        },
     },
 };
 </script>

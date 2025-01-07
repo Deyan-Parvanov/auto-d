@@ -28,7 +28,6 @@ class ListingPolicy
      */
     public function view(?User $user, Listing $listing): bool
     {
-        // return true;
         if ($listing->by_user_id === $user?->id) {
             return true;
         }

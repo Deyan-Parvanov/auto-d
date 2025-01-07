@@ -14,8 +14,9 @@ export const useUserStore = defineStore('userStore', {
         await apiClient.get('/sanctum/csrf-cookie');
 
         const profile = await loginUser(loginData);
-        if (!profile)
-          return false;
+        if (profile.errors)
+          return profile;
+
         this.user = profile;
         apiClient.defaults.headers.common['Authorization'] = `Bearer ${profile.token}`;
 
@@ -53,8 +54,9 @@ export const useUserStore = defineStore('userStore', {
     async registerUser(registerData) {
       try {
         const profile = await registerUser(registerData);
-        if (!profile)
-          return false;
+        
+        if (profile.errors)
+          return profile;
 
         this.user = profile.data;
         const token = profile.token;

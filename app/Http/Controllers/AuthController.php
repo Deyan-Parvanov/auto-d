@@ -28,7 +28,7 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]), true)) {
             throw ValidationException::withMessages([
-                'email' => 'Authentication failed'
+                'message' => 'Authentication failed - invalid credentials!'
             ]);
         }
 
@@ -44,7 +44,7 @@ class AuthController extends Controller
 
     public function destroy(Request $request)
     {
-        $token = $request->bearerToken(); // Retrieve token from Authorization header
+        $token = $request->bearerToken();
 
         if (!$token) {
             return response()->json(['error' => 'No token provided.'], 400);

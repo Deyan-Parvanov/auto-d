@@ -11,6 +11,7 @@ import CreateImage from './Pages/CarDealer/ListingImage/CreateImage.vue';
 import NotificationIndex from './Pages/Notification/NotificationIndex.vue';
 import { useUserStore } from './stores/useUserStore';
 import { useListingsStore } from './stores/useListingsStore';
+import NotFound from './Pages/Error/NotFound.vue';
 
 // ToDo: move route guards to separate file and export it
 const requireAuthentication = (to, from, next) => {
@@ -45,12 +46,19 @@ const requireAuthorization = async (to, from, next) => {
 
   try {
     const listingId = to.params.id;
-    //TODO: test fetchListing
     const listing = await listingStore.fetchListing(listingId);
+    
     const token = userStore.user || localStorage.getItem('authToken');
     
-    if (token.is_admin || (listing && listing.data.by_user_id === token.id)) {
+    if (token.is_admin) {
       next();
+    } else if (listing && listing.data.listing.by_user_id === token.id) {
+      if ((to.name === 'listingEdit' || to.name === 'listingImage') && listing.data.listing.sold_at) {
+        listingStore.error = 'Listing is sold and cannot be updated.';
+        next(false);
+      } else {
+        next();
+      }
     } else {
       listingStore.error = 'You are not authorized to edit this listing.';
       next(false);
@@ -74,6 +82,7 @@ const routes = [
   { path: '/car-dealer/listing/:id/edit', name: 'listingEdit', component: Edit, beforeEnter: requireAuthorization, },
   { path: '/car-dealer/listing/:id/image', name: 'listingImage', component: CreateImage, beforeEnter: requireAuthorization, },
   { path: '/notification', name: 'notification', component: NotificationIndex, beforeEnter: requireAuthentication, },
+  { path: '/:catchAll(.*)', name: 'NotFound', component: NotFound},
 ];
 
 const router = createRouter({

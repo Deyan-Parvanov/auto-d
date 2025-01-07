@@ -69,6 +69,7 @@ export default {
             const response = await notificationsStore.markAsRead(id);
             
             userStore.initializeUser();
+            this.fetchNotifications();
             flashMessageStore.setSuccessMessage(response.data.message);
         },
     },

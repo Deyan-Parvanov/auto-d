@@ -5,7 +5,7 @@
             <section class="flex items-center gap-2 my-4">
                 <input
                     class="border rounded-md file:px-4 file:py-2 border-gray-200 dark:border-gray-700 file:text-gray-700 file:dark:text-gray-400 file:border-0 file:bg-gray-100 file:dark:bg-gray-800 file:font-medium file:hover:bg-gray-200 file:dark:hover:bg-gray-700 file:hover:cursor-pointer file:mr-4"
-                    type="file" multiple name="images[]" @change="handleFileChange" />
+                    ref="fileInput" type="file" multiple name="images[]" @change="handleFileChange" />
                 <button type="submit" class="btn-outline disabled:opacity-25 disabled:cursor-not-allowed"
                     :disabled="!canUpload">Upload</button>
                 <button type="reset" class="btn-outline" @click="reset">Reset</button>
@@ -19,7 +19,8 @@
     <Box v-if="this.listing?.data?.listing?.images?.length" class="mt-4">
         <template #header>Current Listing Images</template>
         <section class="mt-4 grid grid-cols-3 gap-2">
-            <div v-for="image in this.listing.data.listing.images" :key="image.id" class="flex flex-col justify-between">
+            <div v-for="image in this.listing.data.listing.images" :key="image.id"
+                class="flex flex-col justify-between">
                 <img :src="image.src" class="rounded-md" />
                 <button v-if="!listing.deleted_at" @click="deleteImage(image.id)"
                     class="btn-outline text-xs font-medium">
@@ -55,7 +56,7 @@ export default {
         },
         imageErrors() {
             const errors = !this.errors ? [] : Object.values(this.errors);
-        
+
             return errors;
         },
     },
@@ -89,8 +90,10 @@ export default {
                     }
                 );
                 flashMessageStore.setSuccessMessage(response.data.message);
+
+                const listingsStore = useListingsStore();
+                this.listing = await listingsStore.fetchListing(listingId);
                 this.reset();
-                this.error = '';
 
                 // this.listing = response.data;
             } catch (err) {
@@ -100,13 +103,17 @@ export default {
         reset() {
             this.files = [];
             this.error = '';
+
+            if (this.$refs.fileInput) {
+                this.$refs.fileInput.value = '';
+            }
         },
         async deleteImage(imageId) {
             const listingsStore = useListingsStore();
             const flashMessageStore = useFlashMessageStore();
             try {
                 const response = await listingsStore.deleteImage(imageId);
-                this.listing.data.images = this.listing.data.images.filter(image => image.id !== imageId);
+                this.listing.data.listing.images = this.listing.data.listing.images.filter(image => image.id !== imageId);
 
                 flashMessageStore.setSuccessMessage(response.data.message || 'Image deleted successfully.');
             } catch (error) {

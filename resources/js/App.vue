@@ -19,7 +19,7 @@
             </router-link>
             <router-link to="/car-dealer/listing" class="text-sm text-gray-500">{{ user.name }}</router-link>
             <router-link to="/car-dealer/listing/create" class="btn-primary">+ New Listing</router-link>
-            <button @click="logout">Logout</button>
+            <router-link to="/listing" @click="logout">Logout</router-link>
           </div>
           <div v-else class="flex items-center gap-2">
             <router-link to="/register">Register</router-link>

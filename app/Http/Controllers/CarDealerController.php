@@ -37,6 +37,7 @@ class CarDealerController extends Controller
     public function show($id)
     {
         $listing = Listing::find($id);
+        $this->authorize('view', $listing);
         $listing->load('offers', 'offers.bidder');
 
         return response()->json([
@@ -70,6 +71,7 @@ class CarDealerController extends Controller
     public function edit($id)
     {
         $listing = Listing::findOrFail($id);
+        $this->authorize('update', $listing);
 
         return response()->json($listing);
     }
@@ -90,6 +92,7 @@ class CarDealerController extends Controller
         ]);
 
         $listing = Listing::findOrFail($id);
+        $this->authorize('update', $listing);
         $listing->update($validated);
 
         return response()->json([
@@ -100,6 +103,7 @@ class CarDealerController extends Controller
     public function destroy($id)
     {
         $listing = Listing::find($id);
+        $this->authorize('delete', $listing);
 
         if (!$listing) {
             return response()->json(['message' => 'Listing not found'], 404);
@@ -115,6 +119,8 @@ class CarDealerController extends Controller
     public function restore($id)
     {
         $listing = Listing::withTrashed()->findOrFail($id);
+        $this->authorize('restore', $listing);
+
         $listing->restore();
 
         return response()->json([

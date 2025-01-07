@@ -76,6 +76,7 @@ import { useCarDealerStore } from '../../stores/useCarDealerStore.js';
 import { useUserStore } from '../../stores/useUserStore';
 import { useListingsStore } from '../../stores/useListingsStore';
 import { storeToRefs } from 'pinia';
+import { useFlashMessageStore } from '@/stores/useFlashMessageStore';
 
 export default {
     name: 'CarDealerIndex',
@@ -123,7 +124,6 @@ export default {
             }
 
             const listingsStore = useListingsStore();
-            // TODO: test the fetchListing
             const listing = await listingsStore.fetchListing(id);
             if (!listing) {
                 listingsStore.error = 'Listing not found.';
@@ -132,14 +132,17 @@ export default {
 
             const userId = token.id;
 
-            if (!token.is_admin && listing.data.by_user_id !== userId) {
+            if (!token.is_admin && listing.data.listing.by_user_id !== userId) {
                 listingsStore.error = 'You are not authorized to delete this listing.';
                 return;
             }
 
             if (confirm('Are you sure you want to delete this listing?')) {
-                await listingsStore.deleteListing(id);
+                const response = await listingsStore.deleteListing(id);
                 this.fetchCarDealerListings({ page: this.$route.query.page || 1 });
+
+                const flashMessageStore = useFlashMessageStore();
+                flashMessageStore.setSuccessMessage(response.data.message);
             }
         },
         async restoreListing(id) {
@@ -151,15 +154,24 @@ export default {
             }
 
             const listingsStore = useListingsStore();
+            const listing = await listingsStore.fetchListing(id);
+            if (!listing) {
+                listingsStore.error = 'Listing not found.';
+                return;
+            }
+
             const userId = token.id;
 
-            if (!token.is_admin && listing.data.by_user_id !== userId) {
+            if (!token.is_admin && listing.data.listing.by_user_id !== userId) {
                 listingsStore.error = 'You are not authorized to delete this listing.';
                 return;
             }
 
-            await listingsStore.restoreListing(id);
+            const response = await listingsStore.restoreListing(id);
             this.fetchCarDealerListings({ page: this.$route.query.page || 1 });
+
+            const flashMessageStore = useFlashMessageStore();
+            flashMessageStore.setSuccessMessage(response.data.message);
         },
         async setListingData(listing) {
             const listingStore = useListingsStore();

@@ -1,6 +1,7 @@
 <template>
     <Box>
-        <template #header>Offer #{{ offer.id }} <span v-if="offer.accepted_at" class="dark:bg-green-900 dark:text-green-200 bg-green-200 text-green-900 p-1 rounded-md uppercase ml-1">accepted</span></template>
+        <template #header>Offer #{{ offer.id }} <span v-if="offer.accepted_at"
+                class="dark:bg-green-900 dark:text-green-200 bg-green-200 text-green-900 p-1 rounded-md uppercase ml-1">accepted</span></template>
         <section class="flex items-center justify-between">
             <div>
                 <Price :price="offer.amount" class="text-xl" />
@@ -16,7 +17,8 @@
                 </div>
             </div>
             <div>
-                <button v-if="!isSold" class="btn-outline text-xs font-medium" as="button" @click="acceptOffer">
+                <button v-if="!isSold && !offer.accepted_at && !allOffersDisabled"
+                    class="btn-outline text-xs font-medium" as="button" @click="acceptOffer">
                     Accept
                 </button>
             </div>
@@ -45,6 +47,10 @@ export default {
             required: true,
         },
         isSold: Boolean,
+        allOffersDisabled: {
+            type: Boolean,
+            required: true,
+        },
     },
     computed: {
         difference() {
@@ -61,7 +67,11 @@ export default {
 
             try {
                 const response = await offersStore.acceptOfferAction(this.offer.id);
-                flashMessageStore.setSuccessMessage(response.message);
+
+                this.offer.accepted_at = new Date().toISOString();
+                this.$emit('disable-all-offers');
+
+                flashMessageStore.setSuccessMessage(response.data.message);
             } catch (error) {
                 console.error('Error accepting the offer:', error);
             }

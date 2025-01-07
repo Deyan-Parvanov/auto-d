@@ -47,8 +47,10 @@ class ListingController extends Controller
         return response()->json($engineTypes);
     }
 
-    public function show(Listing $listing)
+    public function show($id)
     {
+        $listing = Listing::withTrashed()->findOrFail($id);
+
         if (Auth::user()->cannot('view', $listing)) {
             return response()->json(['error' => 'Not authorized.'],403);
         }

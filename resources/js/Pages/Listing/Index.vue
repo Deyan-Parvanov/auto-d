@@ -23,16 +23,16 @@
 </template>
 
 <script>
-import { storeToRefs } from 'pinia';
-import { useListingsStore } from '../../stores/useListingsStore';
-import { useRouter } from 'vue-router';
 import Box from '../../Components/UI/Box.vue';
 import ListingAddress from '../../Components/ListingAddress.vue';
 import ListingSpace from '../../Components/ListingSpace.vue';
 import Price from '../../Components/Price.vue';
-import { useMonthlyPayment } from '@/Composables/useMonthlyPayment';
 import Pagination from '@/Components/UI/Pagination.vue';
 import Filters from './Components/Filters.vue';
+import { storeToRefs } from 'pinia';
+import { useListingsStore } from '../../stores/useListingsStore';
+import { useRouter } from 'vue-router';
+import { useMonthlyPayment } from '@/Composables/useMonthlyPayment';
 
 export default {
   name: 'Index',
@@ -73,20 +73,23 @@ export default {
     },
     handlePageChange(link) {
       const router = useRouter();
-      const page = new URL(link.url).searchParams.get('page'); // Extract page number from URL
-      router.push({ path: '/listings', query: { page } }); // Update the query parameter in the URL
+      const page = new URL(link.url).searchParams.get('page');
+      router.push({ path: '/listings', query: { page } });
     },
   },
   mounted() {
-    // Get the initial page from the route's query parameters
     const page = this.$route.query.page || 1;
+    this.filters = { ...this.$route.query };
     this.fetchListings(page);
   },
   watch: {
-    // Watch for route changes to trigger a refetch of listings
-    '$route.query.page': function (newPage) {
-      this.fetchListings(newPage || 1);
+  '$route.query': {
+    handler(newQuery) {
+      this.filters = { ...newQuery };
+      this.fetchListings({ page: newQuery.page || 1 });
     },
+    immediate: true,
   },
+},
 };
 </script>
