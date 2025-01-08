@@ -12,6 +12,7 @@ import NotificationIndex from './Pages/Notification/NotificationIndex.vue';
 import NotFound from './Pages/Error/NotFound.vue';
 import { useUserStore } from './stores/useUserStore';
 import { useListingsStore } from './stores/useListingsStore';
+import Index from './Pages/Index/Index.vue';
 
 // ToDo: move route guards to separate file and export it
 const requireAuthentication = (to, from, next) => {
@@ -70,7 +71,7 @@ const requireAuthorization = async (to, from, next) => {
 };
 
 const routes = [
-  { path: '/hello', name: 'hello' },
+  { path: '/', name: 'index', component: Index },
   { path: '/listing', name: 'listing', component: ListingIndex },
   { path: '/listing/:id', name: 'listingShow', component: ListingShow },
   { path: '/login', name: 'login', component: Login },

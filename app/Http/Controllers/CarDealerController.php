@@ -47,7 +47,6 @@ class CarDealerController extends Controller
 
     public function store(Request $request)
     {
-
         $request->user()->listings()->create(
             $request->validate([
                 'category' => 'required|string',

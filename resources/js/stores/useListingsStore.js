@@ -31,6 +31,23 @@ export const useListingsStore = defineStore('listings', {
         this.loading = false;
       }
     },
+    async createListing(payload) {
+      try {
+        const response = await apiClient.post('/car-dealer/listing/create', payload);
+        console.log(response);
+        
+        if (response.errors){
+          this.error = response.errors;
+        }
+        
+        return response;
+      } catch (error) {
+        if (error.response && error.response.data.errors) {
+          this.error = 'Invalid data';
+          return error.response.data;
+        }
+      }
+    },
     async deleteListing(id) {
       try {
         const response = await apiClient.delete(`/car-dealer/listing/${id}`);

@@ -5,7 +5,7 @@
         <label class="label">{{ field.label }}</label>
         <input v-model="form[field.name]" :type="field.type" class="input"
           :class="{ 'border-red-500': $v[field.name]?.$invalid && $v[field.name]?.$dirty }" />
-        <div v-if="$v[field.name]?.$error" class="input-error">
+        <div v-if="$v[field.name]?.$invalid && $v[field.name]?.$dirty" class="input-error">
           {{ fieldError(field.name) }}
         </div>
       </div>
@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useListingCreateStore } from '@/stores/useListingsCreateStore';
+import { useListingsStore } from '@/stores/useListingsStore';
 import { useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
 import { required, numeric, minValue, maxValue } from '@vuelidate/validators';
@@ -50,7 +50,7 @@ const form = ref({
 });
 
 const errors = ref({});
-const listingStore = useListingCreateStore();
+const listingStore = useListingsStore();
 const router = useRouter();
 
 const rules = {
@@ -80,13 +80,20 @@ const $v = useVuelidate(rules, form);
 const create = async () => {
   $v.value.$touch();
   if ($v.value.$invalid) {
-    console.error("Invalid data.");
+    return;
   }
 
   try {
-    await listingStore.createListing(form.value);
-    alert('Listing created successfully');
-    router.push('/listing');
+    const response = await listingStore.createListing(form.value);
+
+    if (response.errors) {
+      mapBackendErrors(response.errors);
+    } else {
+      alert('Listing created successfully');
+      router.push('/listing');
+    }
+
+    return;
   } catch (error) {
     if (error.response && error.response.data.errors) {
       mapBackendErrors(error.response.data.errors);
@@ -100,14 +107,21 @@ const mapBackendErrors = (backendErrors) => {
   for (const field in backendErrors) {
     errors.value[field] = backendErrors[field].join(', ');
   }
+  console.log(errors.value);
+  
 };
 
 const fieldError = (fieldName) => {
   if (errors.value[fieldName]) {
     return errors.value[fieldName];
-  } else if ($v[fieldName]?.$error) {
-    return 'This field is invalid';
   }
+
+  const fieldState = $v.value[fieldName];
+  if (fieldState && fieldState.$dirty && fieldState.$invalid) {
+    const firstError = fieldState.$errors[0]?.$message || 'This field is invalid';
+    return firstError;
+  }
+
   return '';
 };
 </script>
