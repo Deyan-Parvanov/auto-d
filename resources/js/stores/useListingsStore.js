@@ -34,7 +34,6 @@ export const useListingsStore = defineStore('listings', {
     async createListing(payload) {
       try {
         const response = await apiClient.post('/car-dealer/listing/create', payload);
-        console.log(response);
         
         if (response.errors){
           this.error = response.errors;
