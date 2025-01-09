@@ -28,20 +28,20 @@ AutoD is fully dockerized, ensuring a seamless setup process. Follow these steps
 
 ### Steps:
 1. Clone the repository:
-   git clone <repo-link>
-   cd <repo-directory>
-   git pull
+   - git clone <repo-link>
+   - cd <repo-directory>
+   - git pull
 2. Build containers:
-   docker-compose up -d
+   - docker-compose up -d
 3. Install packages:
-   composer install
-   npm install
+   - composer install
+   - npm install
 4. Run migrations and seed the databse:
-   docker-compose exec php php artisan migrate:refresh --seed
+   - docker-compose exec php php artisan migrate:refresh --seed
 5. Run the development server:
-   npm run dev
+   - npm run dev
 6. Open the app:
-   http://localhost
+   - http://localhost
 
 ### Alternative approach
 If you prefer not to use Docker, ensure the following are installed:
