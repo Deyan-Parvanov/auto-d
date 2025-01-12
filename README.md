@@ -38,6 +38,10 @@ AutoD is fully dockerized, ensuring a seamless setup process. Follow these steps
    - npm install
 4. Run migrations and seed the databse:
    - docker-compose exec php php artisan migrate:refresh --seed
+     **Note:** This command will create the database and will seed all tables with data - 10 car listings for admin and 10 car listings for regular user.
+     **There will be two available users:**
+         Admin: email: - test@example.com, password - password
+         Regular user: email: - test2@example.com, password - password
 5. Run the development server:
    - npm run dev
 6. Open the app:
